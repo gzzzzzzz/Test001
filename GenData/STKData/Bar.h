@@ -1,3 +1,5 @@
+#include <vector>
+using namespace std;
 enum BarType
 {
 	Error=0,
@@ -21,4 +23,14 @@ class Bar
 	float vol, amt, v5, v10;
 	float dif, dea, macd;
 	float m5, m10, m20, m60, m120, m250;
+};
+class BarArr
+{
+	vector<Bar*> arr;
+	BarType type;
+};
+class BarGroup
+{
+	BarType base_type;
+	vector<BarArr*> arr;
 };
