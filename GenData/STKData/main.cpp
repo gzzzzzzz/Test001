@@ -3,6 +3,7 @@
 using namespace std;
 std::vector<string> all_sym;
 std::vector<string> all_sym_name;
+double lbl_dis[13] = {0};
 void LoadAllSymbol()
 {
 	char path[260 + 1] = "Data/symbol.csv";
@@ -77,6 +78,8 @@ int main()
 	f_test_img.close();
 	f_test_lbl.close();
 	printf("done, train_cnt=%d, test_cnt=%d\n", train_cnt, test_cnt);
+	for (int i = 0; i < 12; i++)
+		printf("lbl_dis[%d] : %f\n", i, lbl_dis[i] / lbl_dis[12]);
 	system("pause");
 	return 0;
 }

@@ -100,6 +100,7 @@ int Bar::WriteData(fstream& f_img)
 	f_img.write((char*)&rsi3, sof); ret++;
 	return ret;
 }
+extern double lbl_dis[12];
 int Bar::WriteLable(fstream& f_lbl, Bar* next)
 {
 	const int dnum = 11;
@@ -114,6 +115,8 @@ int Bar::WriteLable(fstream& f_lbl, Bar* next)
 		}
 	}
 	f_lbl.write(&lbl, sizeof(lbl));
+	lbl_dis[lbl]++;
+	lbl_dis[dnum + 1]++;
 	return lbl;
 }
 //===================================================================//

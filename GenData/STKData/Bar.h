@@ -5,8 +5,8 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
-#define max_train_num 50000
-#define max_test_num 5000
+#define max_train_num 250000
+#define max_test_num 30000
 using namespace std;
 enum BarType
 {
