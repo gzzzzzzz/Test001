@@ -1,4 +1,29 @@
 #include "Bar.h"
+extern double lbl_dis[dis_num + 1];
+extern double lbl_dis_test[dis_num + 1];
+extern float distr[dis_num];
+extern double lbl_dis_exclude[dis_num + 1];
+int Bar::WriteLable(fstream& f_lbl, Bar* next, double dis[])
+{
+	char lbl = 0;
+	for (int i = dis_num - 1; i >= 0; i--)
+	{
+		if ((next->chg + next->h) > distr[i])
+		{
+			lbl = i;
+			if (m20 < 1 && m10 < 1 && m5 < 1)
+			{
+				lbl_dis_exclude[dis_num]++;
+				lbl_dis_exclude[lbl]++;
+			}
+			break;
+		}
+	}
+	f_lbl.write(&lbl, sizeof(lbl));
+	dis[lbl]++;
+	dis[dis_num]++;
+	return lbl;
+}
 Bar::Bar() :type(BarType::Error), year(0), month(0), day(0)
 , o(0), h(0), l(0), c(0), vol(0), amt(0), turnover(0)
 , m5(0), m10(0), m20(0), m60(0), m120(0), m250(0)
@@ -99,25 +124,6 @@ int Bar::WriteData(fstream& f_img)
 	f_img.write((char*)&rsi2, sof); ret++;
 	f_img.write((char*)&rsi3, sof); ret++;
 	return ret;
-}
-extern double lbl_dis[12];
-int Bar::WriteLable(fstream& f_lbl, Bar* next)
-{
-	const int dnum = 11;
-	float distr[dnum] = {-4, -2.5f, -1.5f, -1, -0.5f, 0, 0.5f, 1, 1.5f, 2.5f, 4};
-	char lbl = 0;
-	for (int i = dnum - 1; i >= 0; i--)
-	{
-		if (next->chg > distr[i])
-		{
-			lbl = i + 1;
-			break;
-		}
-	}
-	f_lbl.write(&lbl, sizeof(lbl));
-	lbl_dis[lbl]++;
-	lbl_dis[dnum + 1]++;
-	return lbl;
 }
 //===================================================================//
 BarArr::BarArr(BarType t) : type(t){}
@@ -253,7 +259,7 @@ void BarGroup::WriteData(fstream& f_train_img, fstream& f_train_lbl, fstream& f_
 
 	int total_cnt = day->bar_vec.size() - 50;
 	int train_start = 44;
-	int train_end = train_start + total_cnt * 0.9f;
+	int train_end = train_start + total_cnt * 0.91f;
 	int test_start = train_end + 1;
 	int test_end = day->bar_vec.size() - 3;
 	printf("%s write day data[%d], train[%d,%d], test[%d,%d]. [%d-%02d-%02d->%d-%02d-%02d]\n"
@@ -268,7 +274,7 @@ void BarGroup::WriteData(fstream& f_train_img, fstream& f_train_lbl, fstream& f_
 		day->bar_vec[i - 2]->WriteData(f_train_img);
 		day->bar_vec[i - 3]->WriteData(f_train_img);
 		day->bar_vec[i - 4]->WriteData(f_train_img);
-		int lbl_v = day->bar_vec[i]->WriteLable(f_train_lbl, day->bar_vec[i + 1]);
+		int lbl_v = day->bar_vec[i]->WriteLable(f_train_lbl, day->bar_vec[i + 1], lbl_dis);
 
 		train_cnt++;
 		if (train_cnt  == max_train_num)
@@ -287,7 +293,7 @@ void BarGroup::WriteData(fstream& f_train_img, fstream& f_train_lbl, fstream& f_
 		day->bar_vec[i - 2]->WriteData(f_test_img);
 		day->bar_vec[i - 3]->WriteData(f_test_img);
 		day->bar_vec[i - 4]->WriteData(f_test_img);
-		int lbl_v = day->bar_vec[i]->WriteLable(f_test_lbl, day->bar_vec[i + 1]);
+		int lbl_v = day->bar_vec[i]->WriteLable(f_test_lbl, day->bar_vec[i + 1], lbl_dis_test);
 		test_cnt++;
 		if (test_cnt == max_test_num)
 		{

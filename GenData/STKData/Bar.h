@@ -1,3 +1,4 @@
+#pragma once
 #include <vector>
 #include <string>
 #include <map>
@@ -5,8 +6,11 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
-#define max_train_num 250000
-#define max_test_num 30000
+#define max_train_num 550000
+#define max_test_num 50000
+#define dis_num 5
+
+//float distr[dis_num-1] = { -4, -2.5f, -1.5f, -1, -0.5f, 0, 0.5f, 1, 1.5f, 2.5f, 4 };
 using namespace std;
 enum BarType
 {
@@ -36,7 +40,7 @@ public:
 	void SetYMD(string& str, char split);
 	void SetVal(string str[]);
 	int WriteData(fstream& f_img);
-	int WriteLable(fstream& f_lbl, Bar* next);
+	int WriteLable(fstream& f_lbl, Bar* next, double dis[]);
 };
 class BarArr
 {

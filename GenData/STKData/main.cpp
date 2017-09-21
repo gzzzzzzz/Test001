@@ -3,7 +3,15 @@
 using namespace std;
 std::vector<string> all_sym;
 std::vector<string> all_sym_name;
-double lbl_dis[13] = {0};
+double lbl_dis[dis_num + 1] = { 0 };
+double lbl_dis_test[dis_num + 1] = { 0 };
+double lbl_dis_exclude[dis_num + 1] = { 0 };
+//float distr[dis_num] = { -11, -0.85f, 0.85f };//next->close
+//float distr[dis_num] = { -11, -0.75f, 0.75f };//next->open{0.15, 0.74, 0.11}
+//float distr[dis_num] = { -11, -0.75f, 0, 0.75f };//next->open,{0.15,0.33,0.41,0.11}
+//float distr[dis_num] = { -11, -0.75f, 0, 0.75f };//next->open,{0.15,0.33,0.41,0.11}
+float distr[dis_num] = { -11, -0.5f, 0.0f, 0.5f, 1.0f};//next->high,{0.15,0.15,0.7}
+//float distr[dis_num] = { -11, -0.5f, 0.2f };//next->low,{0.15,0.15,0.7}
 void LoadAllSymbol()
 {
 	char path[260 + 1] = "Data/symbol.csv";
@@ -21,6 +29,11 @@ void LoadAllSymbol()
 			all_sym.push_back(s[0]);
 			all_sym_name.push_back(s[1]);
 		}
+	}
+	else
+	{
+		printf("can't open symbol.csv\n");
+		exit(999);
 	}
 	fin.close();
 }
@@ -77,9 +90,15 @@ int main()
 	f_train_lbl.close();
 	f_test_img.close();
 	f_test_lbl.close();
-	printf("done, train_cnt=%d, test_cnt=%d\n", train_cnt, test_cnt);
-	for (int i = 0; i < 12; i++)
-		printf("lbl_dis[%d] : %f\n", i, lbl_dis[i] / lbl_dis[12]);
+	printf("done, train_cnt=%d, test_cnt=%d\n\n", train_cnt, test_cnt);
+
+	for (int i = 0; i < dis_num; i++)
+		printf("lbl_dis[%d] : %f\n", i, lbl_dis[i] / lbl_dis[dis_num]);
+	for (int i = 0; i < dis_num; i++)
+		printf("lbl_dis[%d] : %f\n", i, lbl_dis_test[i] / lbl_dis_test[dis_num]);
+	for (int i = 0; i < dis_num; i++)
+		printf("lbl_dis_exclude_m10[%d][%f/%f] : %f\n", i, lbl_dis_exclude[i], lbl_dis_exclude[dis_num], lbl_dis_exclude[i] / lbl_dis_exclude[dis_num]);
+
 	system("pause");
 	return 0;
 }
